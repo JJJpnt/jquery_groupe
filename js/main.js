@@ -21,6 +21,9 @@
     [ Validate ]*/
     var input = $('.validate-input .input100');
 
+
+
+
     $('.validate-form').on('submit',function(){
         var check = true;
 
@@ -69,3 +72,79 @@
     
 
 })(jQuery);
+
+
+
+function login_libre(log) {
+    
+    var result = "NULL";
+    $.ajax({
+        type: 'POST',
+        url: 'check_login.php',
+        data: {login: log},
+        success: function(data) {
+          result=data;
+        },
+        async:false
+        // dataType: dataType,
+      });
+    // Console.log(log);
+    // return JSON.stringify(dat);
+    return result;
+}
+
+// alert(dat);
+
+function validerLogin(input) {
+    var texte = $(input).val();
+    var loginFree = login_libre(texte);
+    console.log(loginFree);
+    var resultat = (texte.match(/^[a-zA-Z0-9_]*$/))?"CBON":"Seulement caractères alphanumériques SVP.";
+    // alert(texte.toLowerCase());
+    if(texte.toLowerCase()=='steven' || texte.toLowerCase()=='valentin') {
+        resultat = "Persona Non Grata !!!";
+    } else if(texte.toLowerCase()=='jjj') {
+        resultat = "Sexy, j'te bz !!!";
+    } else if(texte.toLowerCase()=='lounes') {
+        resultat = "Va réveiller Samuel !";
+    } else if(texte.toLowerCase()=='romain') {
+        resultat = "PAS DE PETITES PERRUCHES";
+    } else if(texte.toLowerCase()=='gregoire') {
+        resultat = "↑ ↑ ↓ ↓ ← → ← → B A Start";
+    } else if(loginFree != "1") {
+        resultat = "Login déjà pris.";
+    };
+
+    // return(login_libre(texte));
+    
+    return (resultat);
+}
+
+$(function(){
+// alert("truc");
+
+
+
+
+
+    var input = $('#input_login'); // on fout le bazaar dans une variable
+    $('#input_login').on('keyup', function(){
+        var validation = validerLogin(input); //on appelle la fonction validation en lui
+        if(validation == "CBON"){
+            // alert("STEVEN ALERT");
+            $('#input_login').removeClass("pas-bon");
+            input.tooltip('hide');    
+        } else {
+            input.attr("data-original-title", validation); //change le texte du tooltip bootstrap
+            input.tooltip('show'); //affiche le tooltip bootstrap
+            $('#input_login').addClass("pas-bon");
+        }
+    });
+
+
+    // Tooltips Initialization
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ trigger : 'manual'})
+    })
+
+});
